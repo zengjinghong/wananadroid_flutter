@@ -6,6 +6,7 @@ import 'package:wananadroid_flutter/pages/top/top_page_view_model.dart';
 import 'package:wananadroid_flutter/utils/toast_utils.dart';
 import 'package:wananadroid_flutter/widgets/vp_banner.dart';
 
+import '../../app/constants.dart';
 import '../../widgets/article_item.dart';
 
 // 顶部页面，使用 StatelessWidget 包装 ChangeNotifierProvider，提供 TopPageViewModel
@@ -77,8 +78,11 @@ class _TopPageBodyState extends State<_TopPageBody>
                 imageList: bannerList.map((e) => e.imagePath).toList(),
                 indicatorType: IndicatorType.circle,
                 bannerClick: (position) {
-                  ToastUtils.showToast(
-                      context, '点击了: ${bannerList[position].title}');
+                  Navigator.pushNamed(context, RoutesConstants.linkDetail,
+                      arguments: {
+                        'link': bannerList[position].url,
+                        'title': bannerList[position].title,
+                      });
                 }),
           ),
 
@@ -96,6 +100,14 @@ class _TopPageBodyState extends State<_TopPageBody>
                     // 点击收藏按钮时调用的回调，触发收藏/取消收藏逻辑
                     onCollectTap: () {
                       _onCollectClick(article);
+                    },
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, RoutesConstants.linkDetail,
+                          arguments: {
+                            'link': article.link,
+                            'title': article.title,
+                          });
                     },
                   ),
                 );

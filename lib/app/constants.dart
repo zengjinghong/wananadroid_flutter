@@ -73,6 +73,15 @@ class RoutesConstants {
 
   /// 体系文章列表
   static const String treeChild = "/tree_child";
+
+  /// 我的收藏列表
+  static const String collectList = "/collect_list";
+
+  /// 文章详情界面
+  static const String linkDetail = "/link_detail";
+
+  /// 搜索界面
+  static const String search = "/search_page";
 }
 
 /// 尺寸常量

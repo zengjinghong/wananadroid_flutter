@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wananadroid_flutter/app/constants.dart';
+import 'package:wananadroid_flutter/pages/navi/navi_page.dart';
 
 // 自定义 AppBar 组件，实现带标题和可选搜索图标的 AppBar
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -45,7 +47,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
                 onPressed: () {
                   // 这里是搜索按钮点击后的回调，可根据需要添加跳转或弹窗逻辑
-                  print("搜索图标点击");
+                  Navigator.pushNamed(context, RoutesConstants.search);
                 },
               )
             ]

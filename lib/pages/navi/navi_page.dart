@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wananadroid_flutter/pages/navi/navi_page_view_model.dart';
 
+import '../../app/constants.dart';
 import '../../base/base_page.dart';
 
 class NaviPage extends StatelessWidget {
@@ -39,7 +40,6 @@ class _NaviPageState extends State<_NaviPageBody> with BasePage<_NaviPageBody> {
   Widget build(BuildContext context) {
     final naviDataList = context.watch<NaviPageViewModel>().naviData;
 
-    print('获取到导航数据: ${naviDataList.length}');
 
     return Scaffold(
       body: Row(
@@ -85,23 +85,35 @@ class _NaviPageState extends State<_NaviPageBody> with BasePage<_NaviPageBody> {
                 itemCount: naviDataList[selectedIndex].articles.length,
                 itemBuilder: (context, index) {
                   final article = naviDataList[selectedIndex].articles[index];
-                  return Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[100 * ((index % 8) + 1)],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          article.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
+
+                  return InkWell(
+                    onTap: () {
+                      print('获取到导航数据: ${article.toJson()}');
+                      Navigator.pushNamed(
+                          context, RoutesConstants.linkDetail,
+                          arguments: {
+                            'link': article.link,
+                            'title': article.title,
+                          });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100 * ((index % 8) + 1)],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            article.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

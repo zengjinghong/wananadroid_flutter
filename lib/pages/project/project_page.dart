@@ -4,6 +4,7 @@ import 'package:wananadroid_flutter/pages/project/project_page_view_model.dart';
 import 'package:wananadroid_flutter/utils/toast_utils.dart';
 import 'package:wananadroid_flutter/widgets/project_article_item.dart';
 
+import '../../app/constants.dart';
 import '../../base/base_page.dart';
 
 class ProjectPage extends StatelessWidget {
@@ -131,8 +132,12 @@ class _ProjectPageState extends State<_ProjectPageBody>
                 return ProjectArticleItemLayout(
                   projectArticle: projectArticleList[i],
                   onCollectTap: () {
-                    // 收藏点击事件
-                    ToastUtils.showToast(context, "你点击了 ${projectArticleList[i].title}");
+                    Navigator.pushNamed(
+                        context, RoutesConstants.linkDetail,
+                        arguments: {
+                          'link': projectArticleList[i].link,
+                          'title': projectArticleList[i].title,
+                        });
                   },
                 );
               },

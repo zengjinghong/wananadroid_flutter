@@ -4,7 +4,7 @@ import 'package:wananadroid_flutter/app/constants.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static String? _cookie; // 内存保存Cookie
+  static String? _cookie = ""; // 内存保存Cookie
 
   /// 登录
   static Future<Map<String, dynamic>> login({
@@ -165,6 +165,53 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  /// 退出登录
+  static Future<Map<String, dynamic>> logout() async {
+    final url = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.logout}");
+    print('退出登录 url 为: $url');
+    final headers = <String, String>{};
+    if (_cookie != null) {
+      headers['Cookie'] = _cookie!;
+    }
+    final response = await http.get(url, headers: headers);
+    _cookie = null;
+    return _handleResponse(response);
+  }
+
+  /// 我的收藏页面
+  static Future<Map<String, dynamic>> collectList(int page) async {
+    final url = Uri.parse(
+        "${ApiConstants.baseUrl}${ApiConstants.collectList}$page/json");
+    print('我的收藏页面 url 为: $url');
+    final headers = <String, String>{};
+    if (_cookie != null) {
+      headers['Cookie'] = _cookie!;
+    }
+    final response = await http.get(url, headers: headers);
+    return _handleResponse(response);
+  }
+
+
+  /// 搜索
+  static Future<Map<String, dynamic>> search({
+    required int page,
+    required String key,
+  }) async {
+    final url = Uri.parse(
+        "${ApiConstants.baseUrl}${ApiConstants.searchForKeyword}$page/json");
+    print('我的搜索 url 为: $url');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Cookie': _cookie!},
+      body: {
+        'k': key,
+      },
+    );
+    print('我的搜索 response body 为: ${response.body}');
+
+    return _handleResponse(response);
+  }
+
   /// 通用处理响应
   static Map<String, dynamic> _handleResponse(http.Response response) {
     if (response.statusCode == 200) {
@@ -174,6 +221,7 @@ class ApiService {
       throw Exception('请求失败：${response.statusCode}');
     }
   }
+
 
   /// 解析cookie，去掉后面的属性，只保留key=value部分
   static String _parseCookie(String rawCookie) {

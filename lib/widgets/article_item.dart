@@ -9,12 +9,14 @@ class ArticleItemLayout extends StatefulWidget {
       {Key? key,
         required this.article,
         required this.onCollectTap,
+        required this.onTap,
         this.showCollectBtn})
       : super(key: key);
 
   final Article article; // 文章数据模型
 
   final void Function() onCollectTap; // 收藏按钮点击回调
+  final void Function() onTap; // 文章列表点击事件
 
   final bool? showCollectBtn; // 是否显示收藏按钮，默认为显示
 
@@ -69,95 +71,98 @@ class _ArticleItemState extends State<ArticleItemLayout> {
 
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Card(
-          surfaceTintColor: Colors.white,
-          color: Colors.white,
-          elevation: 8, // 卡片阴影
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    // 作者名称，若作者为空显示分享人
-                    Container(
-                      padding: widget.article.type == 1
-                          ? const EdgeInsets.fromLTRB(8, 0, 0, 0)
-                          : const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                      child: Text(
-                          '作者: ${widget.article.author.isNotEmpty == true ? widget.article.author : widget.article.shareUser ?? ""}'),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(right: 8),
-                        alignment: Alignment.centerRight,
-                        // 发布时间显示
-                        child: Text(publishTime),
-                      ),
-                    )
-                  ],
-                ),
-                // 文章标题区域，支持HTML样式并限制最大两行，溢出省略
-                Container(
-                  padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
-                  child: Row(
+        child: InkWell(
+          onTap: widget.onTap,
+          child: Card(
+            surfaceTintColor: Colors.white,
+            color: Colors.white,
+            elevation: 8, // 卡片阴影
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Row(
                     children: [
+                      // 作者名称，若作者为空显示分享人
+                      Container(
+                        padding: widget.article.type == 1
+                            ? const EdgeInsets.fromLTRB(8, 0, 0, 0)
+                            : const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text(
+                            '作者: ${widget.article.author.isNotEmpty == true ? widget.article.author : widget.article.shareUser ?? ""}'),
+                      ),
                       Expanded(
-                          child: Html(
-                            data: widget.article.title,
-                            style: {
-                              "html": Style(
-                                  margin: Margins.zero,
-                                  maxLines: 2,
-                                  textOverflow: TextOverflow.ellipsis,
-                                  fontSize: FontSize(14),
-                                  padding: HtmlPaddings.zero,
-                                  alignment: Alignment.topLeft),
-                              "body": Style(
-                                  margin: Margins.zero,
-                                  maxLines: 2,
-                                  textOverflow: TextOverflow.ellipsis,
-                                  fontSize: FontSize(14),
-                                  padding: HtmlPaddings.zero,
-                                  alignment: Alignment.topLeft)
-                            },
-                          ))
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 8),
+                          alignment: Alignment.centerRight,
+                          // 发布时间显示
+                          child: Text(publishTime),
+                        ),
+                      )
                     ],
                   ),
-                ),
-                // 分类标签与收藏按钮一行布局
-                Row(
-                  children: [
-                    // 显示文章分类
-                    Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(sb.toString())),
-                    Expanded(
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        alignment: Alignment.topRight,
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Builder(
-                          builder: (context) {
-                            // 如果不显示收藏按钮，返回空容器
-                            if (widget.showCollectBtn == false) {
-                              return Container();
-                            }
-                            // 收藏按钮，已收藏为红色实心心形，未收藏为默认图标
-                            return GestureDetector(
-                              onTap: widget.onCollectTap,
-                              child: !(widget.article.collect)
-                                  ? Icon(Icons.favorite)
-                                  : Icon(Icons.favorite, color: Colors.red),
-                            );
-                          },
+                  // 文章标题区域，支持HTML样式并限制最大两行，溢出省略
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Html(
+                              data: widget.article.title,
+                              style: {
+                                "html": Style(
+                                    margin: Margins.zero,
+                                    maxLines: 2,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    fontSize: FontSize(14),
+                                    padding: HtmlPaddings.zero,
+                                    alignment: Alignment.topLeft),
+                                "body": Style(
+                                    margin: Margins.zero,
+                                    maxLines: 2,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    fontSize: FontSize(14),
+                                    padding: HtmlPaddings.zero,
+                                    alignment: Alignment.topLeft)
+                              },
+                            ))
+                      ],
+                    ),
+                  ),
+                  // 分类标签与收藏按钮一行布局
+                  Row(
+                    children: [
+                      // 显示文章分类
+                      Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(sb.toString())),
+                      Expanded(
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          alignment: Alignment.topRight,
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Builder(
+                            builder: (context) {
+                              // 如果不显示收藏按钮，返回空容器
+                              if (widget.showCollectBtn == false) {
+                                return Container();
+                              }
+                              // 收藏按钮，已收藏为红色实心心形，未收藏为默认图标
+                              return GestureDetector(
+                                onTap: widget.onCollectTap,
+                                child: !(widget.article.collect)
+                                    ? Icon(Icons.favorite)
+                                    : Icon(Icons.favorite, color: Colors.red),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ));

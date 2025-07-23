@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wananadroid_flutter/pages/treechild/tree_page_child_view_model.dart';
 
+import '../../app/constants.dart';
 import '../../base/base_page.dart';
 import '../../models/articles_response.dart';
 import '../../providers/tree_response_provider.dart';
@@ -137,6 +138,14 @@ class _TreePageChildState extends State<_TreePageChildBody>
                       article: articles[i], // 单篇文章数据
                       onCollectTap: () {
                         _onCollectClick(articles[i]); // 收藏按钮点击事件
+                      },
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, RoutesConstants.linkDetail,
+                            arguments: {
+                              'link': articles[i].link,
+                              'title': articles[i].title,
+                            });
                       },
                       showCollectBtn: true,
                     );
